@@ -1,4 +1,5 @@
 (ns vdotlaskuri
+  (:require [clojure.string :as str])
   (:import (java.lang Math)))
 
 (defn %VOmax
@@ -95,7 +96,7 @@
     (catch Exception e 0)))
 
 (defn parse-time [time]
-  (as-> (clojure.string/split time #"[^\d]") parts
+  (as-> (str/split time #"[^\d]") parts
     (map safe-parseint parts)
     (cond (= 3 (count parts)) (+ (* 60 60 (first parts))
                                  (* 60 (second parts))
