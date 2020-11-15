@@ -105,15 +105,25 @@
           (= 1 (count parts)) (first parts)
           :else 0)))
 
-(defn predict-and-prescribe [race-distance race-duration]
+(defn predict-and-prescribe
+  "Makes training pace prescription and predicts racing results based on test run
+  `race-distance` is the distance in meters
+  `race-duration` is the duration in seconds"
+  [race-distance race-duration]
   [(training-paces race-distance race-duration)
    (race-predictions race-distance race-duration)])
 
+(defn training-from-test
+  "Prescribes training paces based on a test run
+  `distance` is given in meters
+  `duration-string` is given as string, for example 32'30"
+  [distance duration-string]
+  (->> (parse-time duration-string)
+       (training-paces distance)))
 
-(require '[clojure.spec.alpha :as s])
-(require '[clojure.spec.gen.alpha :as sgen])
-(require '[clojure.spec.test.alpha :as stest])
 
-(s/fdef parse-time
-  :args (s/cat :time string?)
-  :ret int?)
+(defn predict-from-test
+  "Predicts race results based on a test run"
+  [distance duration-string]
+  (->> (parse-time duration-string)
+       (race-predictions distance)))
